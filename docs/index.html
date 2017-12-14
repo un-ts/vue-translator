@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible"
+        content="ie=edge">
+  <title>Vue Translator</title>
+  <style>
+    [v-cloak] {
+      display: none
+    }
+
+  </style>
+</head>
+
+<body>
+  <div id="app"
+       v-cloak>
+    <div>{{ $t('hello_world') }}</div>
+    <div>
+      <select v-model="$t.locale">
+        <option value="zh">中文</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+  </div>
+  <script src="https://unpkg.com/vue"></script>
+  <!-- <script src="../dist/umd/vue-translator.js"></script> -->
+  <script src="https://unpkg.com/vue-translator"></script>
+  <script>
+    var cookie = {
+      getItem: function (sKey) {
+        return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+      },
+      setItem: function (sKey, sValue, vEnd, sPath, sDomain, bSecure) {
+        if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) { return false; }
+        var sExpires = "";
+        if (vEnd) {
+          switch (vEnd.constructor) {
+            case Number:
+              sExpires = vEnd === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + vEnd;
+              break;
+            case String:
+              sExpires = "; expires=" + vEnd;
+              break;
+            case Date:
+              sExpires = "; expires=" + vEnd.toUTCString();
+              break;
+          }
+        }
+        document.cookie = encodeURIComponent(sKey) + "=" + encodeURIComponent(sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
+        return true;
+      }
+    }
+
+    Vue.use(VueTranslator.default, {
+      locale: cookie.getItem('locale') || 'zh',
+      translations: {
+        zh: {
+          hello_world: '你好世界'
+        },
+        en: {
+          hello_world: 'Hello World'
+        }
+      }
+    })
+
+    new Vue({
+      el: '#app',
+      watch: {
+        '$t.locale': function (prev, curr) {
+          console.log('prev:', prev)
+          console.log('curr:', curr)
+          cookie.setItem('locale', curr)
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
