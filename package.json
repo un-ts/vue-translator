@@ -1,6 +1,6 @@
 {
   "name": "vue-translator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A deadly simple i18n translate plugin for Vue, ready for Server Side Rendering.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

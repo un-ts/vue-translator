@@ -4,7 +4,6 @@ export interface Translator<Locale = string> {
   (key: string, params?: object): string
   defaultLocale?: Locale
   locale?: Locale
-  create?(DEFAULT_LOCALE?: Locale): Translator
 }
 
 export interface StrObj {
@@ -70,6 +69,7 @@ export const createTranslator = (
 
     if (value === undefined) {
       const { defaultLocale } = instance
+
       if (defaultLocale) {
         const defaultTranslation = translations[defaultLocale]
         value = getTransitionValue(defaultTranslation, key)
@@ -86,8 +86,6 @@ export const createTranslator = (
       value && value.replace(/{([^{}]+)}/g, (matched, $0) => params[$0.trim()])
     return value == null ? key : value
   }
-
-  instance.create = createTranslator
 
   defineReactive(instance, LOCALE, instanceLocale)
   defineReactive(instance, DEFAULT_LOCALE, DefaultLocale)
