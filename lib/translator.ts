@@ -50,7 +50,7 @@ const getTransitionValue = (transition: Translation, key: string): string => {
 export const createTranslator = (
   instanceLocale: string,
   instanceTranslations?: Translations,
-  DefaultLocale?: string,
+  instanceDefaultLocale?: string,
 ) => {
   if (instanceTranslations) {
     if (!translations) {
@@ -63,14 +63,15 @@ export const createTranslator = (
   }
 
   const instance: Translator = (key: string, params?: StrObj) => {
-    const translation = translations[instance.locale]
+    const { locale } = instance
+    const translation = translations[locale]
 
     let value = getTransitionValue(translation, key)
 
     if (value === undefined) {
       const { defaultLocale } = instance
 
-      if (defaultLocale) {
+      if (defaultLocale && defaultLocale !== locale) {
         const defaultTranslation = translations[defaultLocale]
         value = getTransitionValue(defaultTranslation, key)
       }
@@ -88,7 +89,7 @@ export const createTranslator = (
   }
 
   defineReactive(instance, LOCALE, instanceLocale)
-  defineReactive(instance, DEFAULT_LOCALE, DefaultLocale)
+  defineReactive(instance, DEFAULT_LOCALE, instanceDefaultLocale)
 
   return instance
 }

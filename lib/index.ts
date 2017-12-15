@@ -16,6 +16,7 @@ declare module 'vue/types/vue' {
   }
 
   interface VueConstructor {
+    translator: Translator
     util: {
       defineReactive: (obj: object, key: string, val: any) => void
       warn: (msg: string) => void
@@ -44,6 +45,8 @@ export default (
     translations,
     defaultLocale,
   )
+
+  $Vue.translator = defaultTranslator
 
   const { warn } = $Vue.util
 

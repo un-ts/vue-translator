@@ -25,16 +25,18 @@ import Vue from 'vue'
 import VueTranslator form 'vue-translator'
 
 Vue.use(VueTranslator, {
-  locale: string,
-  translations: {
+  locale: string, // required for first rendering
+  translations?: {  // If you want to define translations in component, no need to set it on initialize
     [locale: string]: {
       [key:string]: string | array | object
     }
   },
-  defaultLocale: string,
-  merge: Function // `lodash.merge` for example, if you want to use component translator you must pass it
+  defaultLocale?: string, // when no value can be found in current locale, try to fallback to defaultLocale
+  merge?: Function // `lodash.merge` for example, if you want to use component translator you must pass it
 })
 ```
+
+You will get a default translator instance on `Vue.translator`, it is safe to use it on client, but please avoid use it on server, be careful!
 
 `translations` is often generated via `require.context` provided by `webpack` from `*.{locale}.i18n.json`:
 
@@ -139,6 +141,8 @@ app.use(async (ctx, next) => {
 ```
 
 Then `$t` will be `translator` generated above, if you don't mind user's locale cookie and not pass `translator` instance into `user context`, it will fallback to the default `translator`.
+
+Remember, always get translator instance via `this.$t` of `context.translator` instead of `Vue.translator` unless you are not handling user request.
 
 ## Feature Request or Troubleshooting
 
