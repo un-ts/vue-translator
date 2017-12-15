@@ -1,11 +1,11 @@
 // tslint:disable-next-line no-unused-variable
-import Vue, { ComponentOptions, VueConstructor } from 'vue'
+import VUE, { VueConstructor } from 'vue'
 
 import { Translations, Translator, createTranslator } from './translator'
 
 // tslint:disable no-shadowed-variable
 declare module 'vue/types/options' {
-  interface ComponentOptions<V extends Vue> {
+  interface ComponentOptions<V extends VUE> {
     translator?: Translations
   }
 }
@@ -50,7 +50,7 @@ export default (
 
   const { warn } = $Vue.util
 
-  Vue.mixin({
+  $Vue.mixin({
     beforeCreate() {
       const { name, translator } = this.$options
 

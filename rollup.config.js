@@ -4,15 +4,20 @@ import uglify from 'rollup-plugin-uglify'
 const pkg = require('./package.json')
 
 const NODE_ENV = process.env.NODE_ENV || 'development'
+const format = process.env.FORMAT || 'umd'
 
 const isProd = NODE_ENV === 'production'
 
-const plugins = [
-  replace({
-    'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
-    'process.env.VUE_ENV': JSON.stringify('client'),
-  }),
-]
+const plugins = []
+
+if (format === 'umd') {
+  plugins.push(
+    replace({
+      'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
+      'process.env.VUE_ENV': JSON.stringify('client'),
+    }),
+  )
+}
 
 if (isProd) {
   plugins.push(
@@ -44,8 +49,8 @@ export default {
   name: 'VueTranslator',
   output: {
     exports: 'named',
-    file: `dist/umd/vue-translator${isProd ? '.min' : ''}.js`,
-    format: 'umd',
+    file: `dist/${format}/vue-translator${isProd ? '.min' : ''}.js`,
+    format,
   },
   plugins,
 }
