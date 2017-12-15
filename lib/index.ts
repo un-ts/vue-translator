@@ -6,15 +6,52 @@ import { Translations, createTranslator } from './translator'
 export * from './translator'
 
 export interface TranslatorOptions {
+  defaultLocale?: string
   locale: string
-  translations: Translations
+  merge?: (prev: Translations, next: Translations) => Translations
+  translations?: Translations
 }
 
-export default ($Vue: VueConstructor, options: TranslatorOptions) => {
+const mergedCache: string[] = []
+
+export default (
+  $Vue: VueConstructor,
+  { defaultLocale, locale, merge, translations = {} }: TranslatorOptions,
+) => {
   const defaultTranslator = createTranslator(
-    options.locale,
-    options.translations,
+    locale,
+    translations,
+    defaultLocale,
   )
+
+  const { warn } = $Vue.util
+
+  Vue.mixin({
+    beforeCreate() {
+      const { name, translator } = this.$options
+
+      if (!translator || mergedCache.includes(name)) {
+        return
+      }
+
+      if (!merge) {
+        if (process.env.NODE_ENV === 'development') {
+          warn(
+            'VueTranslator will not help you to merge translations, please pass your own merge strategy, `lodash.merge` for example',
+          )
+        }
+        return
+      }
+
+      merge(translations, translator)
+
+      if (name) {
+        mergedCache.push(name)
+      } else if (process.env.NODE_ENV === 'development') {
+        warn('you should define a unique component name for better cache')
+      }
+    },
+  })
 
   Object.defineProperty(
     $Vue.prototype,

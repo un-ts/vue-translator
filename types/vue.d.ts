@@ -1,4 +1,12 @@
-import { Translator } from '../lib/translator'
+import VUE from 'vue'
+
+import { Translations, Translator } from '../lib/translator'
+
+declare module 'vue/types/options' {
+  interface ComponentOptions<V extends VUE> {
+    translator?: Translations
+  }
+}
 
 declare module 'vue/types/vue' {
   interface Vue {

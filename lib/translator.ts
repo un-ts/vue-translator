@@ -2,6 +2,7 @@ import Vue from 'vue'
 
 export interface Translator<Locale = string> {
   (key: string, params?: object): string
+  defaultLocale?: Locale
   locale?: Locale
   create?(DEFAULT_LOCALE?: Locale): Translator
 }
@@ -10,30 +11,77 @@ export interface StrObj {
   [key: string]: string
 }
 
+export interface Translation {
+  [key: string]: string | Translation
+}
+
 export interface Translations {
-  [locale: string]: StrObj
+  [locale: string]: Translation
 }
 
 const LOCALE = 'locale'
+const DEFAULT_LOCALE = 'defaultLocale'
+
+const { defineReactive, warn } = Vue.util
 
 let translations: Translations
+
+const getTransitionValue = (transition: Translation, key: string): string => {
+  key = key.replace(/\[(\d+)\]/g, '.$1')
+  let value: string | Translation = transition
+
+  key.split('.').some(k => {
+    if (!value || typeof value !== 'object') {
+      return true
+    }
+
+    value = value[k]
+  })
+
+  if (typeof value === 'object') {
+    if (process.env.NODE_ENV === 'development' && value !== null) {
+      warn('you are trying to get non-literal value')
+    }
+    return value && value.toString()
+  }
+
+  return value
+}
 
 export const createTranslator = (
   instanceLocale: string,
   instanceTranslations?: Translations,
+  DefaultLocale?: string,
 ) => {
   if (instanceTranslations) {
-    if (process.env.NODE_ENV === 'development' && translations) {
-      Vue.util.warn('translations should only be injected once!')
-    } else {
+    if (!translations) {
       translations = instanceTranslations
+    } else if (process.env.NODE_ENV === 'development') {
+      warn('translations should only be injected once!')
     }
   } else if (process.env.NODE_ENV === 'development' && !translations) {
-    Vue.util.warn('translations has not be injected, translator will not work!')
+    warn('translations has not be injected, translator will not work!')
   }
 
   const instance: Translator = (key: string, params?: StrObj) => {
-    let value = translations && translations[instance.locale][key]
+    const translation = translations[instance.locale]
+
+    let value = getTransitionValue(translation, key)
+
+    if (value === undefined) {
+      const { defaultLocale } = instance
+      if (defaultLocale) {
+        const defaultTranslation = translations[defaultLocale]
+        value = getTransitionValue(defaultTranslation, key)
+      }
+
+      if (process.env.NODE_ENV === 'development' && value === undefined) {
+        warn(
+          `your are trying to get nonexistent key \`${key}\` without default locale fallback`,
+        )
+      }
+    }
+
     value =
       value && value.replace(/{([^{}]+)}/g, (matched, $0) => params[$0.trim()])
     return value == null ? key : value
@@ -41,7 +89,8 @@ export const createTranslator = (
 
   instance.create = createTranslator
 
-  Vue.util.defineReactive(instance, LOCALE, instanceLocale)
+  defineReactive(instance, LOCALE, instanceLocale)
+  defineReactive(instance, DEFAULT_LOCALE, DefaultLocale)
 
   return instance
 }
