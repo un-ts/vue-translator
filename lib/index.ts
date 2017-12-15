@@ -1,7 +1,28 @@
 // tslint:disable-next-line no-unused-variable
-import Vue, { VueConstructor } from 'vue'
+import Vue, { ComponentOptions, VueConstructor } from 'vue'
 
-import { Translations, createTranslator } from './translator'
+import { Translations, Translator, createTranslator } from './translator'
+
+// tslint:disable no-shadowed-variable
+declare module 'vue/types/options' {
+  interface ComponentOptions<V extends Vue> {
+    translator?: Translations
+  }
+}
+
+declare module 'vue/types/vue' {
+  interface Vue {
+    $t: Translator
+  }
+
+  interface VueConstructor {
+    util: {
+      defineReactive: (obj: object, key: string, val: any) => void
+      warn: (msg: string) => void
+    }
+  }
+}
+// tslint:enable no-shadowed-variable
 
 export * from './translator'
 

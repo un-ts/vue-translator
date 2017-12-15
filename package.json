@@ -1,6 +1,6 @@
 {
   "name": "vue-translator",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A deadly simple i18n translate plugin for Vue, ready for Server Side Rendering.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -9,7 +9,7 @@
   "author": "JounQin <admin@1stg.me>",
   "license": "MIT",
   "scripts": {
-    "build:cjs": "tsc -P . -m commonjs --outDir dist/cjs",
+    "build:cjs": "tsc -P . -m commonjs --outDir dist/cjs -d",
     "build:esm": "tsc -P . -m esnext --outDir dist/esm",
     "build:umd": "concurrently \"rollup -c\" \"cross-env NODE_ENV=production rollup -c\"",
     "build": "rimraf dist && concurrently \"npm run build:cjs\" \"npm run build:esm\" && npm run build:umd",
@@ -18,7 +18,8 @@
     "precommit": "lint-staged",
     "prepublishOnly": "npm run build"
   },
-  "files": ["dist/**/*.js", "dist/**/*.d.ts", "types/*.d.ts"],
+  "files": ["dist/**/*.js", "dist/**/*.d.ts"],
+  "types": "dist/cjs/index.d.ts",
   "lint-staged": {
     "*.{json,md}": ["prettier --write", "git add"],
     "*.ts": ["tslint -p . -t stylish --fix", "git add"]

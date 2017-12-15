@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "alwaysStrict": true,
-    "declaration": true,
     "lib": ["dom", "esnext"],
     "moduleResolution": "node",
     "noImplicitAny": true,
