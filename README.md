@@ -1,16 +1,19 @@
 # vue-translator
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/JounQin/vue-translator.svg)](https://greenkeeper.io/)
+[![Codecov](https://img.shields.io/codecov/c/github/JounQin/vue-translator.svg)](https://codecov.io/gh/JounQin/vue-translator)
 [![Travis](https://img.shields.io/travis/JounQin/vue-translator.svg)](https://travis-ci.org/JounQin/vue-translator)
+[![npm](https://img.shields.io/npm/dt/vue-translator.svg)](https://www.npmjs.com/package/vue-translator)
 [![David](https://img.shields.io/david/JounQin/vue-translator.svg)](https://david-dm.org/JounQin/vue-translator)
 [![David Dev](https://img.shields.io/david/dev/JounQin/vue-translator.svg)](https://david-dm.org/JounQin/vue-translator?type=dev)
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
 A deadly simple i18n translate plugin for Vue, ready for Server Side Rendering.
 
 ## Demo
 
-https://JounQin.github.io/vue-translator
+client side rendering: https://JounQin.github.io/vue-translator
+server side rendering: https://rubick.1stg.me ([source code](https://github.com/JounQin/Rubick))
 
 ## Usage
 
