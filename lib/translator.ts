@@ -47,11 +47,15 @@ const getTransitionValue = (transition: Translation, key: string): string => {
   return value
 }
 
-export const createTranslator = (
-  instanceLocale: string,
-  instanceTranslations?: Translations,
-  instanceDefaultLocale?: string,
-) => {
+export const createTranslator = ({
+  locale: instanceLocale,
+  translations: instanceTranslations,
+  defaultLocale: instanceDefaultLocale,
+}: {
+  locale: string
+  translations?: Translations
+  defaultLocale?: string
+}) => {
   if (instanceTranslations) {
     if (!translations) {
       translations = instanceTranslations
@@ -62,7 +66,11 @@ export const createTranslator = (
     warn('translations has not be injected, translator will not work!')
   }
 
-  const instance: Translator = (key: string, params?: StrObj) => {
+  const instance: Translator = (
+    key: string,
+    params?: StrObj,
+    ignoreNonExist?: boolean,
+  ) => {
     const { locale } = instance
     const translation = translations[locale]
 
@@ -76,7 +84,11 @@ export const createTranslator = (
         value = getTransitionValue(defaultTranslation, key)
       }
 
-      if (process.env.NODE_ENV === 'development' && value === undefined) {
+      if (
+        process.env.NODE_ENV === 'development' &&
+        value === undefined &&
+        !ignoreNonExist
+      ) {
         warn(
           `your are trying to get nonexistent key \`${key}\` without default locale fallback`,
         )

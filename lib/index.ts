@@ -40,11 +40,11 @@ export default (
   $Vue: VueConstructor,
   { defaultLocale, locale, merge, translations = {} }: TranslatorOptions,
 ) => {
-  const defaultTranslator = createTranslator(
+  const defaultTranslator = createTranslator({
     locale,
     translations,
     defaultLocale,
-  )
+  })
 
   $Vue.translator = defaultTranslator
 

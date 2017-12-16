@@ -20,13 +20,13 @@ yarn add vue-translator
 
 ### Basic Usage
 
-```js
+```ts
 import Vue from 'vue'
 import VueTranslator form 'vue-translator'
 
 Vue.use(VueTranslator, {
-  locale: string, // required for first rendering
-  translations?: {  // If you want to define translations in component, no need to set it on initialize
+  locale?: string, // set it on initialize or before first rendering
+  translations?: {  // If you want to define translations in component only, no need to set it on initialize
     [locale: string]: {
       [key:string]: string | array | object
     }
@@ -43,6 +43,8 @@ You will get a default translator instance on `Vue.translator`, it is safe to us
 ```ts
 const context = require.context('.', true, /([\w-]*[\w]+)\.i18n\.json$/)
 
+const LOCALE_KEYS: { [key: string]: string[] } = {}
+
 const translations: {
   [locale: string]: {
     [key: string]: string
@@ -53,13 +55,12 @@ const translations: {
   const matched = modules[lang] || (modules[lang] = {})
 
   if (process.env.NODE_ENV === 'development') {
-    const keys = LOCALE_KEYS[lang]
+    const keys = LOCALE_KEYS[lang] || (LOCALE_KEYS[lang] || [])
     const moduleKeys = Object.keys(module)
 
     const duplicates = _.intersection(keys, moduleKeys)
 
     if (duplicates.length) {
-      // tslint:disable-next-line no-console
       console.warn('detect duplicate keys:', duplicates)
     }
 
@@ -95,6 +96,8 @@ Then you will be able to use `$t` in all your component template.
 </script>
 ```
 
+If you are trying to get a non-exist key or value is undefined, you will get a warning in console on development. And if you want to ignore it, pass a third parameter `ignoreNonExist: boolean`: `$t('non-exist-key', null, true)`.
+
 If you want to watch locale change in any component, global watch should be defined on root component:
 
 ```js
@@ -124,13 +127,16 @@ Or you want to change locale on client:
 
 You'd better to detect user custom locale via cookie and fallback to [accept-language](https://github.com/tinganho/node-accept-language) on first request.
 
-And you need to generate a single translator instance for every user request (cache by locale would be better), `koa` for example:
+And you need to generate a single translator instance for every user request (cache by locale would be better) via `createTranslator`, `koa` for example:
 
-```js
+```ts
 import { createTranslator } from 'vue-translator'
 
 app.use(async (ctx, next) => {
-  const translator = createTranslator(ctx.cookies.get('locale_cookie'))
+  const translator = createTranslator({
+    locale: string, // ctx.cookies.get('locale_cookie')
+    defaultLocale: string,
+  })
 
   const context = {} // user context
 
