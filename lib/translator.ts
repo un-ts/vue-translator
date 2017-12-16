@@ -6,10 +6,6 @@ export interface Translator<Locale = string> {
   locale?: Locale
 }
 
-export interface StrObj {
-  [key: string]: string
-}
-
 export interface Translation {
   [key: string]: string | Translation
 }
@@ -47,15 +43,25 @@ const getTransitionValue = (transition: Translation, key: string): string => {
   return value
 }
 
-export const createTranslator = ({
-  locale: instanceLocale,
-  translations: instanceTranslations,
-  defaultLocale: instanceDefaultLocale,
-}: {
+export interface TranslatorOptions {
   locale: string
   translations?: Translations
   defaultLocale?: string
-}) => {
+}
+
+export const createTranslator = (
+  translatorOptions: string | TranslatorOptions,
+): Translator => {
+  if (typeof translatorOptions === 'string') {
+    translatorOptions = { locale: translatorOptions }
+  }
+
+  const {
+    locale: instanceLocale,
+    translations: instanceTranslations,
+    defaultLocale: instanceDefaultLocale,
+  } = translatorOptions
+
   if (instanceTranslations) {
     if (!translations) {
       translations = instanceTranslations
@@ -68,7 +74,7 @@ export const createTranslator = ({
 
   const instance: Translator = (
     key: string,
-    params?: StrObj,
+    params?: any,
     ignoreNonExist?: boolean,
   ) => {
     const { locale } = instance

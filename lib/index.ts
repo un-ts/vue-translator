@@ -1,7 +1,12 @@
 // tslint:disable-next-line no-unused-variable
 import VUE, { VueConstructor } from 'vue'
 
-import { Translations, Translator, createTranslator } from './translator'
+import {
+  Translations,
+  Translator,
+  TranslatorOptions,
+  createTranslator,
+} from './translator'
 
 // tslint:disable no-shadowed-variable
 declare module 'vue/types/options' {
@@ -27,19 +32,24 @@ declare module 'vue/types/vue' {
 
 export * from './translator'
 
-export interface TranslatorOptions {
-  defaultLocale?: string
-  locale: string
+export type VueTranslatorOptions = TranslatorOptions & {
   merge?: (prev: Translations, next: Translations) => Translations
-  translations?: Translations
 }
 
 const mergedCache: string[] = []
 
 export default (
   $Vue: VueConstructor,
-  { defaultLocale, locale, merge, translations = {} }: TranslatorOptions,
+  options: string | VueTranslatorOptions,
 ) => {
+  if (typeof options === 'string') {
+    options = {
+      locale: options,
+    }
+  }
+
+  const { defaultLocale, locale, merge, translations = {} } = options
+
   const defaultTranslator = createTranslator({
     locale,
     translations,
