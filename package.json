@@ -15,7 +15,7 @@
     "build": "rimraf dist && npm run build:esm && concurrently \"npm run build:cjs\" \"npm run build:umd\"",
     "lint": "tslint -p . -e 'node_modules/**' -e 'dist/**' -t stylish '**/*.ts'",
     "lint:fix": "npm run lint -- --fix",
-    "test": "jest",
+    "test": "cross-env NODE_ENV=development jest",
     "precommit": "lint-staged",
     "prepublishOnly": "npm run build"
   },

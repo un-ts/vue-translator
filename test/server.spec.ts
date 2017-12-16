@@ -1,8 +1,12 @@
+import _Vue from 'vue'
 import { createLocalVue } from 'vue-test-utils'
 
 import VueTranslator, { createTranslator } from '../lib'
 
 process.env.VUE_ENV = 'server'
+
+_Vue.config.productionTip = false
+const mockFn = (_Vue.config.warnHandler = jest.fn())
 
 const Vue = createLocalVue()
 
@@ -18,6 +22,7 @@ describe('work on server', () => {
 
   test('fallback to default translator', () => {
     expect(app.$t).toBe(Vue.translator)
+    expect(mockFn).toBeCalled()
   })
 
   test('should respect context translator', () => {

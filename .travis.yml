@@ -16,5 +16,5 @@ script:
   - yarn test
 
 after_script:
-  - greenkeeper-lockfile-upload
   - codecov
+  - greenkeeper-lockfile-upload

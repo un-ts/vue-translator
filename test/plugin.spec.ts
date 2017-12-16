@@ -50,6 +50,7 @@ test('render correct locale text and watch locale change', () => {
 test('translator defined in component options', () => {
   const wrapper = mount(
     {
+      name: 'custom-component',
       template: `<div>{{ $t('component') }}</div>`,
       translator: {
         zh: {
