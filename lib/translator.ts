@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 export interface Translator<Locale = string> {
-  (key: string, params?: object): string
+  (key: string, params?: any, ignoreNonExist?: boolean): string
   defaultLocale?: Locale
   locale?: Locale
 }
