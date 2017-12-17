@@ -1,6 +1,6 @@
 {
   "name": "vue-translator",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "A deadly simple i18n translate plugin for Vue, ready for Server Side Rendering.",
   "main": "dist/cjs/vue-translator.js",
   "module": "dist/esm/index.js",
@@ -9,7 +9,7 @@
   "author": "JounQin <admin@1stg.me>",
   "license": "MIT",
   "scripts": {
-    "build:esm": "tsc -P . -m esnext --outDir dist/esm -d",
+    "build:esm": "tsc -P tsconfig.build.json -m esnext --outDir dist/esm -d",
     "build:cjs": "cross-env FORMAT=cjs rollup -c",
     "build:umd": "concurrently \"rollup -c\" \"cross-env NODE_ENV=production rollup -c\"",
     "build": "rimraf dist && npm run build:esm && concurrently \"npm run build:cjs\" \"npm run build:umd\"",
@@ -17,12 +17,21 @@
     "lint:fix": "npm run lint -- --fix",
     "test": "cross-env NODE_ENV=development jest",
     "precommit": "lint-staged",
+    "prepush": "npm run test",
     "prepublishOnly": "npm run build"
   },
   "files": ["dist/**/*.js", "dist/**/*.d.ts"],
   "types": "dist/esm/index.d.ts",
   "jest": {
     "collectCoverage": true,
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    },
     "mapCoverage": true,
     "transform": {
       "^.+\\.ts$": "ts-jest"
@@ -62,7 +71,7 @@
     "lodash": "^4.17.4",
     "prettier": "^1.9.2",
     "rimraf": "^2.6.2",
-    "rollup": "^0.52.1",
+    "rollup": "^0.52.2",
     "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-typescript": "^0.8.1",
     "rollup-plugin-uglify": "^2.0.1",

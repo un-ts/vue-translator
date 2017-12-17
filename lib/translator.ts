@@ -6,12 +6,8 @@ export interface Translator<Locale = string> {
   locale?: Locale
 }
 
-export interface Translation {
-  [key: string]: string | Translation
-}
-
 export interface Translations {
-  [locale: string]: Translation
+  [locale: string]: any
 }
 
 const LOCALE = 'locale'
@@ -21,9 +17,9 @@ const { defineReactive, warn } = Vue.util
 
 let translations: Translations
 
-const getTransitionValue = (transition: Translation, key: string): string => {
+const getValue = (input: any, key: string): string => {
   key = key.replace(/\[(\d+)\]/g, '.$1')
-  let value: string | Translation = transition
+  let value = input
 
   key.split('.').some(k => {
     if (!value || typeof value !== 'object') {
@@ -80,14 +76,14 @@ export const createTranslator = (
     const { locale } = instance
     const translation = translations[locale]
 
-    let value = getTransitionValue(translation, key)
+    let value = getValue(translation, key)
 
     if (value === undefined) {
       const { defaultLocale } = instance
 
       if (defaultLocale && defaultLocale !== locale) {
         const defaultTranslation = translations[defaultLocale]
-        value = getTransitionValue(defaultTranslation, key)
+        value = getValue(defaultTranslation, key)
       }
 
       if (
@@ -102,7 +98,8 @@ export const createTranslator = (
     }
 
     value =
-      value && value.replace(/{([^{}]+)}/g, (matched, $0) => params[$0.trim()])
+      value &&
+      value.replace(/{([^{}]+)}/g, (matched, $0) => getValue(params, $0.trim()))
     return value == null ? key : value
   }
 

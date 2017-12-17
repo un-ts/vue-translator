@@ -13,6 +13,7 @@ A deadly simple i18n translate plugin for Vue, ready for Server Side Rendering.
 ## Demo
 
 client side rendering: https://JounQin.github.io/vue-translator
+
 server side rendering: https://rubick.1stg.me ([source code](https://github.com/JounQin/Rubick))
 
 ## Usage
@@ -152,6 +153,57 @@ app.use(async (ctx, next) => {
 Then `$t` will be `translator` generated above, if you don't mind user's locale cookie and not pass `translator` instance into `user context`, it will fallback to the default `translator`.
 
 Remember, always get translator instance via `this.$t` of `context.translator` instead of `Vue.translator` unless you are not handling user request.
+
+## template syntax
+
+Translation key should be string, but `.`(dot) will be parsed as nested key, it will also work in template!
+
+```js
+$t('a.b.c') // will try to find `a.b.c` on your custom transition, if a is falsy, will render undefined and try default locale
+
+// render `nested value`
+new Vue({
+  translator: {
+    en: {
+      a: {
+        b: {
+          c: 'nested value',
+        },
+      },
+    },
+  },
+})
+
+// render `nested template`
+$t('a.b', {c: d: 'nested template'})
+new Vue({
+  translator: {
+    en: {
+      a: {
+        b: '{ c.d }'
+      },
+    },
+  },
+})
+```
+
+Array is also supported, `.index`(dot) or `[index]` can both be used!
+
+```js
+// nested with array key and template
+// render `1`
+$t('a.b[0]', [{ a: 1 }])
+
+new Vue({
+  translator: {
+    en: {
+      a: {
+        b: ['{ 0.a }'], // do not use `[0].a` here, `0[a]` is also OK
+      },
+    },
+  },
+})
+```
 
 ## Feature Request or Troubleshooting
 
