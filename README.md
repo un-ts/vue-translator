@@ -26,7 +26,7 @@ yarn add vue-translator
 
 ```ts
 import Vue from 'vue'
-import VueTranslator form 'vue-translator'
+import VueTranslator from 'vue-translator'
 
 Vue.use(VueTranslator, {
   locale?: string, // set it on initialize or before first rendering
