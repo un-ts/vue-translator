@@ -36,7 +36,7 @@ export type VueTranslatorOptions = TranslatorOptions & {
   merge?: (prev: Translations, next: Translations) => Translations
 }
 
-const mergedCache: string[] = []
+const mergedCache: number[] = []
 
 export default (
   $Vue: VueConstructor,
@@ -62,9 +62,11 @@ export default (
 
   $Vue.mixin({
     beforeCreate() {
-      const { name, translator } = this.$options
+      const { translator } = this.$options
 
-      if (!translator || mergedCache.includes(name)) {
+      const { cid } = Object.getPrototypeOf(this).constructor
+
+      if (!translator || mergedCache.includes(cid)) {
         return
       }
 
@@ -79,11 +81,7 @@ export default (
 
       merge(translations, translator)
 
-      if (name) {
-        mergedCache.push(name)
-      } else if (process.env.NODE_ENV === 'development') {
-        warn('you should define a unique component name for better cache')
-      }
+      mergedCache.push(cid)
     },
   })
 

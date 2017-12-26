@@ -87,7 +87,7 @@ Then you will be able to use `$t` in all your component template.
 </template>
 <script>
   export default {
-    name: 'custom-component', // it is needed for better cache
+    name: 'custom-component', // it is needed for better cache for < 0.6.0, after >= 0.6.0 not required
     translator: {
       zh: {
         message: '我的信息'
