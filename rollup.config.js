@@ -33,7 +33,10 @@ export default {
   amd: {
     id: 'vue-translator',
   },
-  banner: `/*!
+  external: ['vue'],
+  input: 'dist/esm/index.js',
+  output: {
+    banner: `/*!
 * ${pkg.name} ${pkg.description}
 * Version ${pkg.version}
 * Copyright (C) 2017 JounQin <admin@1stg.me>
@@ -41,9 +44,6 @@ export default {
 *
 * Github: https://github.com/JounQin/vue-translator
 */`,
-  external: ['vue'],
-  input: 'dist/esm/index.js',
-  output: {
     exports: 'named',
     file: `dist/${format}/vue-translator${isProd ? '.min' : ''}.js`,
     format,
