@@ -13,7 +13,7 @@ export interface Translations {
 const LOCALE = 'locale'
 const DEFAULT_LOCALE = 'defaultLocale'
 
-const { defineReactive, warn } = Vue.util
+const { defineReactive } = Vue.util
 
 let translations: Translations
 
@@ -31,7 +31,7 @@ const getValue = (input: any, key: string): string => {
 
   if (typeof value === 'object') {
     if (process.env.NODE_ENV === 'development' && value !== null) {
-      warn('you are trying to get non-literal value')
+      Vue.util.warn('you are trying to get non-literal value')
     }
     return value && value.toString()
   }
@@ -62,10 +62,10 @@ export const createTranslator = (
     if (!translations) {
       translations = instanceTranslations
     } else if (process.env.NODE_ENV === 'development') {
-      warn('translations should only be injected once!')
+      Vue.util.warn('translations should only be injected once!')
     }
   } else if (process.env.NODE_ENV === 'development' && !translations) {
-    warn('translations has not be injected, translator will not work!')
+    Vue.util.warn('translations has not be injected, translator will not work!')
   }
 
   const instance: Translator = (
@@ -91,7 +91,7 @@ export const createTranslator = (
         value === undefined &&
         !ignoreNonExist
       ) {
-        warn(
+        Vue.util.warn(
           `your are trying to get nonexistent key \`${key}\` without default locale fallback`,
         )
       }

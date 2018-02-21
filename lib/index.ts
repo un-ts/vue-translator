@@ -7,7 +7,6 @@ import {
   createTranslator,
 } from './translator'
 
-// tslint:disable no-shadowed-variable
 declare module 'vue/types/options' {
   interface ComponentOptions<V extends Vue> {
     translator?: Translations
@@ -57,21 +56,19 @@ export default (
 
   $Vue.translator = defaultTranslator
 
-  const { warn } = $Vue.util
-
   $Vue.mixin({
     beforeCreate() {
       const { translator } = this.$options
 
       const { cid } = Object.getPrototypeOf(this).constructor
 
-      if (!translator || mergedCache.includes(cid)) {
+      if (!translator || mergedCache.indexOf(cid) + 1) {
         return
       }
 
       if (!merge) {
         if (process.env.NODE_ENV === 'development') {
-          warn(
+          $Vue.util.warn(
             'VueTranslator will not help you to merge translations, please pass your own merge strategy, `lodash.merge` for example',
           )
         }
@@ -119,7 +116,7 @@ export default (
   }
 
   if (process.env.VUE_ENV !== 'server') {
-    Vue.filter(filter, $Vue.translator)
+    $Vue.filter(filter, defaultTranslator)
     return
   }
 
