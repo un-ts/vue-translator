@@ -43,14 +43,14 @@ export default {
 */`,
   external: ['vue'],
   input: 'dist/esm/index.js',
-  globals: {
-    vue: 'Vue',
-  },
-  name: 'VueTranslator',
   output: {
     exports: 'named',
     file: `dist/${format}/vue-translator${isProd ? '.min' : ''}.js`,
     format,
+    globals: {
+      vue: 'Vue',
+    },
+    name: 'VueTranslator',
   },
   plugins,
 }

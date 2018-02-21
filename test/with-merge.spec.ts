@@ -1,6 +1,6 @@
+import { createLocalVue, mount } from '@vue/test-utils'
 import { merge } from 'lodash'
 import _Vue from 'vue'
-import { createLocalVue, mount } from 'vue-test-utils'
 
 import VueTranslator from '../lib'
 

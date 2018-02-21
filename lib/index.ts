@@ -1,5 +1,4 @@
-// tslint:disable-next-line no-unused-variable
-import VUE, { VueConstructor } from 'vue'
+import Vue, { VueConstructor } from 'vue'
 
 import {
   Translations,
@@ -10,7 +9,7 @@ import {
 
 // tslint:disable no-shadowed-variable
 declare module 'vue/types/options' {
-  interface ComponentOptions<V extends VUE> {
+  interface ComponentOptions<V extends Vue> {
     translator?: Translations
   }
 }
@@ -28,11 +27,11 @@ declare module 'vue/types/vue' {
     }
   }
 }
-// tslint:enable no-shadowed-variable
 
 export * from './translator'
 
 export type VueTranslatorOptions = TranslatorOptions & {
+  filter?: boolean | string
   merge?: (prev: Translations, next: Translations) => Translations
 }
 
@@ -108,4 +107,35 @@ export default (
           writable: process.env.NODE_ENV === 'development',
         },
   )
+
+  let { filter } = options
+
+  if (!filter) {
+    return
+  }
+
+  if (filter === true) {
+    filter = 'translate'
+  }
+
+  if (process.env.VUE_ENV !== 'server') {
+    Vue.filter(filter, $Vue.translator)
+    return
+  }
+
+  const { _f } = $Vue.prototype
+
+  // a hacky way to support filter on server, so `filter` is not enabled by default
+  $Vue.prototype._f = function(id: string) {
+    if (
+      process.env.NODE_ENV === 'development' &&
+      this.$options.filters[filter as string]
+    ) {
+      $Vue.util.warn(
+        `duplicate filter \`${filter}\` found, please rename to a unique filter name`,
+      )
+    }
+
+    return id === filter ? this.$t : _f.call(this, id)
+  }
 }

@@ -36,6 +36,7 @@ Vue.use(VueTranslator, {
     }
   },
   defaultLocale?: string, // when no value can be found in current locale, try to fallback to defaultLocale
+  filter?: boolean | string, // whether to enable filter `translate` or custom define filter name (>= 0.7.0)
   merge?: Function // `lodash.merge` for example, if you want to use component translator you must pass it
 })
 ```
@@ -86,17 +87,17 @@ Then you will be able to use `$t` in all your component template.
   </div>
 </template>
 <script>
-  export default {
-    name: 'custom-component', // it is needed for better cache for < 0.6.0, after >= 0.6.0 not required
-    translator: {
-      zh: {
-        message: '我的信息'
-      },
-      en: {
-        message: 'My Message'
-      }
-    }
-  }
+export default {
+  name: 'custom-component', // it is needed for better cache for < 0.6.0, after >= 0.6.0 not required
+  translator: {
+    zh: {
+      message: '我的信息',
+    },
+    en: {
+      message: 'My Message',
+    },
+  },
+}
 </script>
 ```
 
@@ -153,6 +154,8 @@ app.use(async (ctx, next) => {
 Then `$t` will be `translator` generated above, if you don't mind user's locale cookie and not pass `translator` instance into `user context`, it will fallback to the default `translator`.
 
 Remember, always get translator instance via `this.$t` of `context.translator` instead of `Vue.translator` unless you are not handling user request.
+
+And notice implement of filter `translate` on server is a little hacky which overwrites `Vue.prototype._f` internally to get `this.$t` for every request.
 
 ## template syntax
 
