@@ -1,5 +1,5 @@
 import replace from 'rollup-plugin-replace'
-import uglify from 'rollup-plugin-uglify'
+import { uglify } from 'rollup-plugin-uglify'
 
 const pkg = require('./package.json')
 
@@ -30,12 +30,12 @@ if (isProd) {
 }
 
 export default {
-  amd: {
-    id: 'vue-translator',
-  },
   external: ['vue'],
   input: 'dist/esm/index.js',
   output: {
+    amd: {
+      id: 'vue-translator',
+    },
     banner: `/*!
 * ${pkg.name} ${pkg.description}
 * Version ${pkg.version}
