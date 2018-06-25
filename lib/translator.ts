@@ -30,6 +30,7 @@ const getValue = (input: any, key: string): string => {
   })
 
   if (typeof value === 'object') {
+    // istanbul ignore next
     if (process.env.NODE_ENV === 'development' && value !== null) {
       Vue.util.warn('you are trying to get non-literal value')
     }
@@ -61,7 +62,12 @@ export const createTranslator = (
   if (instanceTranslations) {
     if (!translations) {
       translations = instanceTranslations
-    } else if (process.env.NODE_ENV === 'development') {
+    }
+    // istanbul ignore next
+    else if (
+      process.env.NODE_ENV === 'development' &&
+      translations !== instanceTranslations
+    ) {
       Vue.util.warn('translations should only be injected once!')
     }
   } else if (process.env.NODE_ENV === 'development' && !translations) {

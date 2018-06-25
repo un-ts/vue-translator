@@ -5,7 +5,6 @@ import _Vue from 'vue'
 import VueTranslator from '../lib'
 
 _Vue.config.productionTip = false
-const mockFn = (_Vue.config.warnHandler = jest.fn())
 
 const Vue = createLocalVue()
 
@@ -32,9 +31,7 @@ test('merge with no component name', () => {
     },
   )
 
-  expect(mockFn).toBeCalled()
   expect(wrapper.element.innerHTML).toBe('使用合并选项')
   Vue.translator.locale = 'en'
-  wrapper.update()
   expect(wrapper.element.innerHTML).toBe('With Merge')
 })

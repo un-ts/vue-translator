@@ -36,7 +36,7 @@ export type VueTranslatorOptions = TranslatorOptions & {
 
 const mergedCache: number[] = []
 
-export default (
+const VueTranslator = (
   $Vue: VueConstructor,
   options: string | VueTranslatorOptions,
 ) => {
@@ -67,6 +67,7 @@ export default (
       }
 
       if (!merge) {
+        // istanbul ignore next
         if (process.env.NODE_ENV === 'development') {
           $Vue.util.warn(
             'VueTranslator will not help you to merge translations, please pass your own merge strategy, `lodash.merge` for example',
@@ -136,3 +137,7 @@ export default (
     return id === filter ? this.$t : _f.call(this, id)
   }
 }
+
+export default VueTranslator
+
+export const install = VueTranslator

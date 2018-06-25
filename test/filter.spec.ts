@@ -5,13 +5,28 @@ import VueTranslator from '../lib'
 
 _Vue.config.productionTip = false
 
-const Vue = createLocalVue()
-
-Vue.use(VueTranslator, {
-  locale: 'zh',
-  filter: true,
-})
+const translations = {}
 
 it('should define filter translate', () => {
+  const Vue = createLocalVue()
+
+  Vue.use(VueTranslator, {
+    locale: 'zh',
+    filter: true,
+    translations,
+  })
+
   expect(Vue.filter('translate')).toBe(Vue.translator)
+})
+
+it('should work with custom filter name', () => {
+  const Vue = createLocalVue()
+
+  Vue.use(VueTranslator, {
+    locale: 'zh',
+    filter: 't',
+    translations,
+  })
+
+  expect(Vue.filter('t')).toBe(Vue.translator)
 })

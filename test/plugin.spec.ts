@@ -43,7 +43,6 @@ test('render correct locale text and watch locale change', () => {
 
   expect(wrapper.element.innerHTML).toBe('Hello World')
   translator.locale = 'zh'
-  wrapper.update()
   expect(wrapper.element.innerHTML).toBe('你好世界')
 })
 
@@ -68,6 +67,5 @@ test('translator defined in component options', () => {
 
   expect(wrapper.element.innerHTML).toBe('组件')
   translator.locale = 'en'
-  wrapper.update()
   expect(wrapper.element.innerHTML).toBe('Component')
 })
