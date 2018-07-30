@@ -105,7 +105,9 @@ export const createTranslator = (
 
     value =
       value &&
-      value.replace(/{([^{}]+)}/g, (matched, $0) => getValue(params, $0.trim()))
+      value.replace(/{([^{}]+)}/g, (_matched, $0) =>
+        getValue(params, $0.trim()),
+      )
     return value == null ? key : value
   }
 

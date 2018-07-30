@@ -13,7 +13,7 @@
     "build:cjs": "cross-env FORMAT=cjs rollup -c",
     "build:umd": "concurrently \"rollup -c\" \"cross-env NODE_ENV=production rollup -c\"",
     "build": "rimraf dist && npm run build:esm && concurrently \"npm run build:cjs\" \"npm run build:umd\"",
-    "lint": "tslint -p . -e 'node_modules/**' -e 'dist/**' -t stylish '**/*.ts'",
+    "lint": "tslint -p . -t stylish '**/*.ts'",
     "lint:fix": "npm run lint -- --fix",
     "test": "cross-env NODE_ENV=development jest",
     "precommit": "lint-staged",
