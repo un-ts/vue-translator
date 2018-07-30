@@ -2,6 +2,7 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
+    "esModuleInterop": true,
     "lib": ["dom", "esnext"],
     "moduleResolution": "node",
     "noImplicitAny": true,
